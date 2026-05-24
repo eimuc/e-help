@@ -260,10 +260,10 @@ var MSGS = [
 var OBJECTS = [
   {
     id: 1,
-    name: "Prekybos centras „Nordika“",
+    name: "Amber Grid AB",
     addr: "Ozo g. 25, Vilnius",
     img: "mall",
-    systems: "Lenel, Avigilon",
+    systems: "Lenel, Avigilon, Inim",
     contacts: [
       {
         name: "Tomas Kazlauskas",
@@ -287,21 +287,21 @@ var OBJECTS = [
       {
         who: "Marius L.",
         when: "2026-05-15",
-        what: "Kameros kalibracija, 3 jungikliai pakeisti",
+        what: "Pakeista pagrindinio įėjimo durų sklendė (atvirkštinė)",
       },
       {
         who: "Jonas S.",
         when: "2026-03-10",
-        what: "Prieigos kortelių programavimas",
+        what: "Pakeistas POE injector",
       },
     ],
   },
   {
     id: 2,
-    name: "Verslo centras „Green Hall“",
+    name: "SEB Bankas AB“",
     addr: "K. Donelaičio g. 10, Vilnius",
     img: "building",
-    systems: "CCTV 48 kameros, Prieigos kontrolė 16 durų",
+    systems: "Avigilon, Lenel, Galaxy, Inim",
     contacts: [
       {
         name: "Rimas Jonaitis",
@@ -320,25 +320,25 @@ var OBJECTS = [
       {
         who: "Marius L.",
         when: "2026-05-22",
-        what: "Kamerų sistemos instaliacija",
+        what: "24 naujų kamerų įrengimas",
       },
       {
         who: "Petras K.",
         when: "2026-03-10",
-        what: "Prieigos koriţlių programavimas",
+        what: "Prieigos kortelių programavimas",
       },
     ],
   },
   {
     id: 3,
-    name: "Sandėlio patalpos",
+    name: "Lietuvos oro uostai",
     addr: "Pramonių g. 4, Vilnius",
     img: "warehouse",
-    systems: "CCTV 12 kameros, Signalizacija",
+    systems: "Bentel, DSC, Integriti, Bosch",
     contacts: [
       {
         name: "Algis Butkus",
-        role: "Sandelėlininkas",
+        role: "Inžinierius",
         phone: "+370 600 33333",
       },
     ],
@@ -353,9 +353,9 @@ var OBJECTS = [
       {
         who: "Marius L.",
         when: "2026-05-23",
-        what: "Gedimo diagnozė, laukiama dalies",
+        what: "Perkrauta gaisro centralė",
       },
-      { who: "Petras K.", when: "2026-01-15", what: "Kameros pernaujovintos" },
+      { who: "Petras K.", when: "2026-01-15", what: "Kameros firmware update" },
     ],
   },
 ];
