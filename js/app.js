@@ -298,7 +298,7 @@ var OBJECTS = [
   },
   {
     id: 2,
-    name: "SEB Bankas AB“",
+    name: "SEB Bankas AB",
     addr: "K. Donelaičio g. 10, Vilnius",
     img: "building",
     systems: "Avigilon, Lenel, Galaxy, Inim",
@@ -436,6 +436,7 @@ var PAGES = [
   "pgObjDet",
   "pgInstr",
   "pgAtas",
+  "pgDuty",
 ];
 function show(id) {
   PAGES.forEach(function (p) {
@@ -637,10 +638,22 @@ on("lgP", "keydown", function (e) {
 });
 // LOGOUT
 on("logoutBtn", "click", function () {
-  document.getElementById("logoutModal").classList.add("open");
+  var lm = document.getElementById("logoutModal");
+  document.body.appendChild(lm);
+  lm.style.display = "flex";
+  lm.style.alignItems = "flex-end";
+  lm.style.justifyContent = "center";
+  lm.style.position = "fixed";
+  lm.style.top = "0";
+  lm.style.left = "0";
+  lm.style.width = "100vw";
+  lm.style.height = "100dvh";
+  lm.style.background = "rgba(15,23,42,0.55)";
+  lm.style.zIndex = "99999";
+  lm.classList.add("open");
 });
 on("logoutConfirm", "click", function () {
-  document.getElementById("logoutModal").classList.remove("open");
+  (function(){var _m=document.getElementById("logoutModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
   show("pgLogin");
   document.getElementById("lgU").value = "";
   document.getElementById("lgP").value = "";
@@ -648,7 +661,7 @@ on("logoutConfirm", "click", function () {
   toast("Atsijungta");
 });
 on("logoutCancel", "click", function () {
-  document.getElementById("logoutModal").classList.remove("open");
+  (function(){var _m=document.getElementById("logoutModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
 });
 // SEARCH
 on("srchInp", "input", renderJobs);
@@ -828,7 +841,7 @@ function toggleTimer(type) {
   startLive();
 }
 
-function checkNote() {
+function checkNote(showHint) {
   var j = JOBS.find(function (x) {
     return x.id === cid;
   });
@@ -838,7 +851,7 @@ function checkNote() {
   var ok = j && j.notes && j.notes.trim().length >= 3;
   btn.disabled = !ok;
   if (hint)
-    hint.textContent = ok ? "" : "Prieš užbaigiant būtina įrašyti pastabas";
+    hint.textContent = (showHint && !ok) ? "Prieš užbaigiant būtina įrašyti pastabas" : "";
 }
 function renderDet() {
   var j = JOBS.find(function (x) {
@@ -1004,7 +1017,15 @@ function renderDet() {
       20,
     ) +
     "Medžiagos</div>";
+  h +=
+    '<div style="width:76px;height:76px;border-radius:12px;background:rgba(109,40,217,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:#7C3AED;font-size:10px;font-weight:700;" id="sigBtn">' +
+    sv(
+      '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>',
+      20,
+    ) +
+    "Parašas</div>";
   h += "</div>";
+  h += '<div id="sigPreview"></div>';
   h += '<div class="sec">Pastabos</div>';
   h +=
     '<textarea class="nta" id="noteArea" placeholder="Privaloma įrašyti pastabas...">' +
@@ -1029,9 +1050,12 @@ function renderDet() {
     JOBS.find(function (x) {
       return x.id === cid;
     }).notes = this.value;
-    checkNote();
+    checkNote(false);
   });
   on("finBtn", "click", function () {
+    var j = JOBS.find(function(x){ return x.id === cid; });
+    var ok = j && j.notes && j.notes.trim().length >= 3;
+    if (!ok) { checkNote(true); return; }
     toast("Darbas sėkmingai užbaigtas!");
     clearInterval(liveInt);
     setTimeout(function () {
@@ -1045,7 +1069,10 @@ function renderDet() {
   on("matBtn", "click", function () {
     openModal("matsModal");
   });
-  checkNote();
+  on("sigBtn", "click", function () {
+    openModal("sigModal");
+  });
+  checkNote(false);
 }
 
 // MSGS
@@ -1431,6 +1458,13 @@ on("goAtas", "click", function () {
   show("pgAtas");
   renderAtas();
 });
+on("goDuty", "click", function () {
+  show("pgDuty");
+  renderDuty();
+});
+on("dutyBack", "click", function () {
+  show("pgMore");
+});
 on("atasBack", "click", function () {
   show("pgMore");
 });
@@ -1542,34 +1576,80 @@ function updateMoreHeader() {
       "linear-gradient(160deg,#0B2D6E 0%,#1245A0 50%,#1A56BF 100%)";
   }
 }
+function toggleMoreMenu() {
+  var drop = document.getElementById("moreMenuDrop");
+  if (!drop) return;
+  drop.style.display = drop.style.display === "none" ? "block" : "none";
+}
+// Close menu on outside click
+document.addEventListener("click", function(e) {
+  var btn = document.getElementById("moreMenuBtn");
+  var drop = document.getElementById("moreMenuDrop");
+  if (drop && btn && !btn.contains(e.target) && !drop.contains(e.target)) {
+    drop.style.display = "none";
+  }
+});
+function showLogout() {
+  document.getElementById("moreMenuDrop").style.display = "none";
+  var lm = document.getElementById("logoutModal");
+  document.body.appendChild(lm);
+  lm.style.display = "block"; lm.style.backgroundColor = "rgba(15,23,42,0.6)";
+  var panel = lm.querySelector(".mpanel");
+  if (panel) { panel.style.position="absolute"; panel.style.left="0"; panel.style.right="0"; panel.style.bottom="0"; panel.style.width="100%"; panel.style.boxSizing="border-box"; panel.style.borderRadius="20px 20px 0 0"; }
+  lm.classList.add("open");
+}
 function toggleTheme() {
   isDark = !isDark;
   if (document.body) document.body.classList.toggle("dark", isDark);
-  var dot = null;
-  var ttl = document.getElementById("themeTitle");
-  if (dot) {
-    dot.style.left = isDark ? "24px" : "2px";
-    dot.style.background = isDark ? "#1A56A0" : "var(--t3)";
-  }
-  if (ttl) ttl.textContent = isDark ? "Tamsi tema" : "Šviesi tema";
   var sun = document.getElementById("icoSun");
   var moon = document.getElementById("icoMoon");
-  var tl = document.getElementById("themeLabel");
+  var lbl = document.getElementById("themeLabelMenu");
   if (sun) sun.style.display = isDark ? "block" : "none";
   if (moon) moon.style.display = isDark ? "none" : "block";
-  if (tl) tl.textContent = isDark ? "Šviesi tema" : "Tamsi tema";
+  if (lbl) lbl.textContent = isDark ? "Šviesi tema" : "Tamsi tema";
   updateMoreHeader();
 }
 
 // MODALS
 function openModal(id) {
-  document.getElementById(id).classList.add("open");
+  var el = document.getElementById(id);
+  if (!el) return;
+  document.body.appendChild(el);
+  el.setAttribute("style", "position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;z-index:99999 !important;display:block !important;");
+  // Add backdrop div if not exists
+  var bd = el.querySelector(".modal-backdrop");
+  if (!bd) {
+    bd = document.createElement("div");
+    bd.className = "modal-backdrop";
+    bd.setAttribute("style", "position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.65);");
+    el.insertBefore(bd, el.firstChild);
+    bd.addEventListener("click", function() { el.style.display = "none"; el.classList.remove("open"); });
+  }
+  var panel = el.querySelector(".mpanel");
+  if (panel) {
+    var isDarkMode = document.body.classList.contains("dark");
+    var panelBg = isDarkMode ? "#1e293b" : "#ffffff";
+    panel.style.position = "absolute";
+    panel.style.left = "0";
+    panel.style.right = "0";
+    panel.style.bottom = "0";
+    panel.style.width = "100%";
+    panel.style.maxHeight = "92vh";
+    panel.style.boxSizing = "border-box";
+    panel.style.overflow = "hidden";
+    panel.style.margin = "0";
+    panel.style.borderRadius = "20px 20px 0 0";
+    panel.style.background = panelBg;
+    panel.style.display = "flex";
+    panel.style.flexDirection = "column";
+  }
+  el.classList.add("open");
 }
 on("drawClose", "click", function () {
-  document.getElementById("drawModal").classList.remove("open");
+  (function(){var _m=document.getElementById("drawModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
 });
 on("matsClose", "click", function () {
-  document.getElementById("matsModal").classList.remove("open");
+  (function(){var _m=document.getElementById("matsModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
 });
 on("matAdd", "click", function () {
   var inp = document.getElementById("matInp"),
@@ -1993,6 +2073,397 @@ function toast(msg) {
     el.classList.remove("show");
   }, 2200);
 }
+
+// BUDEIJMAS (Duty Log)
+var DUTY_LOG = [
+  {
+    id: 1,
+    eng: "Tomas Kazlauskas",
+    company: 'UAB "Elektrum Lietuva"',
+    obj: "Šalčininkai 65MW",
+    date: "2026-06-07 22:15",
+    fault: "Nuolat signalizavo 14-as detektorius.",
+    action: "Pakeistas detektorius Nr. 14. Atliktas pilnas sistemos testas.",
+  },
+  {
+    id: 2,
+    eng: "Algirdas Petraitis",
+    company: 'UAB "Green Energy LT"',
+    obj: "Ignalina 40MW saulės parkas",
+    date: "2026-06-06 03:40",
+    fault: "Gedimas UPS sistemoje — sistema neperjungė į atsarginį maitinimą.",
+    action: "Pakeistas nublankęs modulis. Sistema atstatyta ir patikrinta.",
+  },
+  {
+    id: 3,
+    eng: "Marius Jonaitis",
+    company: 'UAB "Elektrum Lietuva"',
+    obj: "Varėna 20MW",
+    date: "2026-05-31 19:30",
+    fault: "Gaisro detektorius nuolat signalizuoja.",
+    action: "Pakeistas detektorius Nr. 14. Atliktas pilnas sistemos testas.",
+  },
+  {
+    id: 4,
+    eng: "Tomas Kazlauskas",
+    company: 'UAB "Litgrid"',
+    obj: "Kaunas PST 330kV",
+    date: "2026-05-28 01:20",
+    fault: "Durų valdiklis nereagavo — prieiga blokuota.",
+    action: "Durų valdiklis perkrautas. Atnaujinta prieigos teisių lentelė.",
+  },
+];
+var dutyNextId = 5;
+var dutyFilter = "month";
+
+function renderDuty() {
+  var el = document.getElementById("dutyList");
+  if (!el) return;
+
+  var searchEl = document.getElementById("dutySearch");
+  var q = searchEl ? searchEl.value.trim().toLowerCase() : "";
+  var CURRENT_USER = "Tomas Kazlauskas";
+
+  var now = new Date();
+  var filtered = DUTY_LOG.slice().reverse().filter(function (e) {
+    if (dutyFilter === "month") {
+      var d = new Date(e.date.replace(" ", "T"));
+      if (d.getFullYear() !== now.getFullYear() || d.getMonth() !== now.getMonth()) return false;
+    }
+    if (dutyFilter === "mine" && e.eng !== CURRENT_USER) return false;
+    if (!q) return true;
+    return (e.eng + " " + e.company + " " + e.obj + " " + (e.fault||"") + " " + e.action).toLowerCase().indexOf(q) !== -1;
+  });
+
+  // Update filter chip styles
+  ["month","all","mine"].forEach(function(f) {
+    var ids = {month:"dutyFMonth", all:"dutyFAll", mine:"dutyFMine"};
+    var btn = document.getElementById(ids[f]);
+    if (!btn) return;
+    var active = dutyFilter === f;
+    btn.style.background = active ? "var(--acc)" : "var(--bg3)";
+    btn.style.color = active ? "#fff" : "var(--t2)";
+    btn.style.border = active ? "1.5px solid var(--acc)" : "1.5px solid var(--bdr)";
+    btn.style.fontWeight = active ? "700" : "600";
+  });
+
+  if (filtered.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--t3);font-size:13px;">Įrašų nerasta</div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(function (e) {
+    var initials = e.eng.split(" ").map(function (w) { return w[0]; }).join("").toUpperCase();
+    var LT_MONTHS = ["Sau","Vas","Kov","Bal","Geg","Bir","Lie","Rgp","Rgs","Spa","Lap","Grd"];
+    var dateParts = e.date.split(" ");
+    var timePart = dateParts[1] || "";
+    var entryDate = new Date(e.date.replace(" ", "T"));
+    var nowD = new Date();
+    var diffMs = nowD - entryDate;
+    var diffH = Math.floor(diffMs / 3600000);
+    var diffD = Math.floor(diffMs / 86400000);
+    var mon = LT_MONTHS[entryDate.getMonth()];
+    var day = entryDate.getDate();
+    var fullDate = day + " " + mon + " " + entryDate.getFullYear() + " \u00b7 " + timePart;
+    var relLabel;
+    if (diffH < 1) relLabel = "K\u0105 tik";
+    else if (diffH < 24) relLabel = "Prie\u0161 " + diffH + " val.";
+    else if (diffD === 1) relLabel = "Vakar \u00b7 " + timePart;
+    else if (diffD < 7) relLabel = "Prie\u0161 " + diffD + " d. \u00b7 " + timePart;
+    else relLabel = day + " " + mon + " \u00b7 " + timePart;
+    return (
+      '<div style="background:var(--bg2);border-radius:12px;padding:10px 12px;margin-bottom:8px;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
+      '<div style="width:28px;height:28px;border-radius:50%;background:rgba(15,118,110,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#0F766E;flex-shrink:0;">' + initials + "</div>" +
+      '<div style="font-size:13px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + e.eng + "</div>" +
+      '<div class="duty-date" style="font-size:11px;color:var(--t3);cursor:pointer;white-space:nowrap;text-decoration:underline dotted;" data-full="' + fullDate + '" data-rel="' + relLabel + '" onclick="var t=this;t.textContent=t.textContent===t.dataset.full?t.dataset.rel:t.dataset.full;">' + relLabel + "</div>" +
+      "</div>" +
+      '<div style="display:flex;flex-direction:column;gap:2px;background:var(--bg3);border-radius:7px;padding:5px 8px;margin-bottom:6px;">' +
+      '<div style="display:flex;align-items:center;gap:5px;min-width:0;">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="flex-shrink:0;"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>' +
+      '<span style="font-size:11px;color:var(--t3);flex-shrink:0;">\u012em.\u00a0</span>' +
+      '<span style="font-size:11px;font-weight:700;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + e.company + "</span>" +
+      "</div>" +
+      '<div style="display:flex;align-items:center;gap:5px;min-width:0;">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>' +
+      '<span style="font-size:11px;color:var(--t3);flex-shrink:0;">Obj.\u00a0</span>' +
+      '<span style="font-size:11px;font-weight:700;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + e.obj + "</span>" +
+      "</div>" +
+      "</div>" +
+      (e.fault ? '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-right:4px;">Gedimas</span>' + e.fault + "</div>" : "") +
+      '<div style="font-size:12px;color:var(--t2);line-height:1.5;">' + (e.action ? '<span style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-right:4px;">Atlikta</span>' : "") + e.action + "</div>" +
+      (e.mgr ? '<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(217,119,6,0.12);border-radius:6px;padding:3px 8px;margin-top:6px;font-size:11px;font-weight:700;color:#D97706;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Perduota vadovui</div>' : "") +
+      "</div>"
+    );
+  }).join("");
+}
+
+// Duty photo picker
+var dutyPhotos = [];
+on("dutyPhotoBtn", "click", function () {
+  var inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "image/*";
+  inp.multiple = true;
+  inp.onchange = function () {
+    Array.prototype.forEach.call(inp.files, function (file) {
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        dutyPhotos.push(ev.target.result);
+        var list = document.getElementById("dutyPhotoList");
+        if (!list) return;
+        var wrap = document.createElement("div");
+        wrap.style.cssText = "position:relative;width:60px;height:60px;";
+        var idx = dutyPhotos.length - 1;
+        wrap.innerHTML =
+          '<img src="' + ev.target.result + '" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1.5px solid var(--bdr);" />' +
+          '<button onclick="dutyPhotos.splice(' + idx + ',1);this.parentNode.remove();" style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#DC2626;border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">✕</button>';
+        list.appendChild(wrap);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  inp.click();
+});
+
+// Duty searchable dropdowns
+var DUTY_COMPANIES = Array.from(new Set(OBJECTS.map(function(o){ return o.name; }))).sort();
+// Objects list: "Įmonė · Objektas" — reuse OBJECTS names as single-level for now
+// In real app this would be per-company. Here we expose all object names.
+var DUTY_OBJECTS = Array.from(new Set(OBJECTS.map(function(o){ return o.addr ? o.name : o.name; }))).sort();
+
+function dutyDropItems(type, q) {
+  var list = type === "company" ? DUTY_COMPANIES : DUTY_OBJECTS;
+  q = (q || "").toLowerCase().trim();
+  return list.filter(function(v){ return !q || v.toLowerCase().indexOf(q) !== -1; });
+}
+
+function dutyRenderDrop(type) {
+  var inpId = type === "company" ? "dutyCompanyInp" : "dutyObjInp";
+  var dropId = type === "company" ? "dutyCompanyDrop" : "dutyObjDrop";
+  var inp = document.getElementById(inpId);
+  var drop = document.getElementById(dropId);
+  if (!inp || !drop) return;
+  var q = inp.value;
+  var items = dutyDropItems(type, q);
+  var iStyle = "padding:10px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--bdr);";
+  var html = items.map(function(v){
+    return '<div style="' + iStyle + '" onmousedown="dutyPickItem(\'' + type + '\',this)" data-val="' + v.replace(/"/g,'&quot;') + '">' + v + '</div>';
+  }).join("");
+  // Always show "Įrašyti ranka" hint if user typed something not in list
+  if (q && items.indexOf(q) === -1) {
+    html += '<div style="' + iStyle + 'color:var(--acc);font-style:italic;border-bottom:none;" onmousedown="dutyPickManual(\'' + type + '\')">+ Naudoti „' + q.replace(/"/g,'&quot;') + '"</div>';
+  }
+  drop.innerHTML = html || '<div style="padding:10px 12px;font-size:12px;color:var(--t3);">Nieko nerasta</div>';
+  drop.style.display = "block";
+}
+
+function dutyPickItem(type, el) {
+  var inpId = type === "company" ? "dutyCompanyInp" : "dutyObjInp";
+  var dropId = type === "company" ? "dutyCompanyDrop" : "dutyObjDrop";
+  document.getElementById(inpId).value = el.getAttribute("data-val");
+  document.getElementById(dropId).style.display = "none";
+}
+function dutyPickManual(type) {
+  var dropId = type === "company" ? "dutyCompanyDrop" : "dutyObjDrop";
+  document.getElementById(dropId).style.display = "none";
+}
+function dutyOpenDropdown(type) { dutyRenderDrop(type); }
+function dutyFilterDropdown(type) { dutyRenderDrop(type); }
+
+// Close dropdowns on outside click
+document.addEventListener("click", function(ev) {
+  ["company","obj"].forEach(function(type){
+    var inpId = type === "company" ? "dutyCompanyInp" : "dutyObjInp";
+    var dropId = type === "company" ? "dutyCompanyDrop" : "dutyObjDrop";
+    var inp = document.getElementById(inpId);
+    var drop = document.getElementById(dropId);
+    if (drop && inp && !inp.contains(ev.target) && !drop.contains(ev.target)) {
+      drop.style.display = "none";
+    }
+  });
+});
+
+// Duty manager handoff toggle
+var dutyMgrEnabled = false;
+function dutySetMgr(val) {
+  dutyMgrEnabled = val;
+  var yesBtn = document.getElementById("dutyMgrYes");
+  var noBtn = document.getElementById("dutyMgrNo");
+  if (yesBtn) { yesBtn.style.background = val ? "var(--acc)" : "var(--bg3)"; yesBtn.style.color = val ? "#fff" : "var(--t2)"; yesBtn.style.fontWeight = val ? "700" : "600"; }
+  if (noBtn) { noBtn.style.background = val ? "var(--bg3)" : "var(--acc)"; noBtn.style.color = val ? "var(--t2)" : "#fff"; noBtn.style.fontWeight = val ? "600" : "700"; }
+}
+
+on("dutyAddBtn", "click", function () {
+  dutyMgrEnabled = false;
+  dutySetMgr(false);
+  dutyPhotos = [];
+  var photoList = document.getElementById("dutyPhotoList");
+  if (photoList) photoList.innerHTML = "";
+  // Default to current datetime
+  var now = new Date();
+  var pad = function (n) { return n < 10 ? "0" + n : n; };
+  var localDT = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + "T" + pad(now.getHours()) + ":" + pad(now.getMinutes());
+  document.getElementById("dutyDateInp").value = localDT;
+  document.getElementById("dutyCompanyInp").value = "";
+  document.getElementById("dutyObjInp").value = "";
+  document.getElementById("dutyFaultInp").value = "";
+  document.getElementById("dutyActInp").value = "";
+  openModal("dutyModal");
+});
+
+on("dutyModalClose", "click", function () {
+  (function(){var _m=document.getElementById("dutyModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
+});
+
+on("dutySaveBtn", "click", function () {
+  var company = document.getElementById("dutyCompanyInp").value.trim();
+  var obj = document.getElementById("dutyObjInp").value.trim();
+  var fault = document.getElementById("dutyFaultInp").value.trim();
+  var act = document.getElementById("dutyActInp").value.trim();
+  var dtRaw = document.getElementById("dutyDateInp").value;
+  if (!company || !obj || !act || !dtRaw) {
+    toast("Užpildykite visus laukus");
+    return;
+  }
+  var dateStr = dtRaw.replace("T", " ");
+  var mgr = dutyMgrEnabled;
+  DUTY_LOG.push({ id: dutyNextId++, eng: "Tomas Kazlauskas", company: company, obj: obj, date: dateStr, fault: fault, action: act, mgr: mgr, photos: dutyPhotos.slice() });
+  dutyPhotos = [];
+  renderDuty();
+  (function(){var _m=document.getElementById("dutyModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
+  toast("Budėjimo įrašas pridėtas");
+});
+
+// SIGNATURE CANVAS
+on("sigModalClose", "click", function () {
+  (function(){var _m=document.getElementById("sigModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
+});
+
+on("sigClear", "click", function () {
+  var canvas = document.getElementById("sigCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+on("sigSave", "click", function () {
+  var canvas = document.getElementById("sigCanvas");
+  var ctx = canvas.getContext("2d");
+  var px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  var hasContent = false;
+  for (var i = 3; i < px.length; i += 4) {
+    if (px[i] > 0) {
+      hasContent = true;
+      break;
+    }
+  }
+  if (!hasContent) {
+    toast("Prašome pasirašyti");
+    return;
+  }
+  (function(){var _m=document.getElementById("sigModal");if(_m){_m.classList.remove("open");_m.style.display="none";}})();;
+  // Show saved signature thumbnail in detail
+  var sigArea = document.getElementById("sigPreview");
+  if (sigArea) {
+    sigArea.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:10px;padding:8px 12px;margin-top:8px;">' +
+      '<img src="' +
+      canvas.toDataURL() +
+      '" style="height:36px;border-radius:6px;background:#fff;" />' +
+      '<span style="font-size:12px;color:var(--t2);">Parašas išsaugotas</span>' +
+      '<button onclick="clearSig()" style="background:none;border:none;color:#DC2626;cursor:pointer;font-size:16px;margin-left:auto;">&#x2715;</button>' +
+      "</div>";
+  }
+  toast("Parašas išsaugotas");
+});
+
+function clearSig() {
+  var sigArea = document.getElementById("sigPreview");
+  if (sigArea) sigArea.innerHTML = "";
+}
+
+function initSigCanvas() {
+  var canvas = document.getElementById("sigCanvas");
+  if (!canvas) return;
+  var ctx = canvas.getContext("2d");
+  var drawing = false;
+  var lastX, lastY;
+
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY,
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
+    };
+  }
+
+  canvas.addEventListener("mousedown", function (e) {
+    drawing = true;
+    var p = getPos(e);
+    lastX = p.x;
+    lastY = p.y;
+  });
+  canvas.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    drawing = true;
+    var p = getPos(e);
+    lastX = p.x;
+    lastY = p.y;
+  });
+  canvas.addEventListener("mousemove", function (e) {
+    if (!drawing) return;
+    var p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = document.body.classList.contains("dark") ? "#f1f5f9" : "#0f172a";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    lastX = p.x;
+    lastY = p.y;
+  });
+  canvas.addEventListener("touchmove", function (e) {
+    e.preventDefault();
+    if (!drawing) return;
+    var p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = document.body.classList.contains("dark") ? "#f1f5f9" : "#0f172a";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    lastX = p.x;
+    lastY = p.y;
+  });
+  canvas.addEventListener("mouseup", function () {
+    drawing = false;
+  });
+  canvas.addEventListener("touchend", function () {
+    drawing = false;
+  });
+  canvas.addEventListener("mouseleave", function () {
+    drawing = false;
+  });
+}
+
+// Init signature canvas after DOM ready
+document.addEventListener("DOMContentLoaded", function () {
+  initSigCanvas();
+});
+// Also init immediately in case DOM is already ready
+initSigCanvas();
 
 // INIT - render calendar on load
 renderCal();

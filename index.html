@@ -637,6 +637,40 @@
               overflow: hidden;
             "
           >
+            <!-- Three dots menu top-right -->
+            <div style="position:absolute;top:16px;right:16px;">
+              <button
+                id="moreMenuBtn"
+                onclick="toggleMoreMenu()"
+                style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
+                  <circle cx="12" cy="5" r="1" fill="rgba(255,255,255,0.9)"></circle>
+                  <circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.9)"></circle>
+                  <circle cx="12" cy="19" r="1" fill="rgba(255,255,255,0.9)"></circle>
+                </svg>
+              </button>
+              <div id="moreMenuDrop" style="display:none;position:absolute;top:42px;right:0;background:var(--bg2);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.18);border:1px solid var(--bdr);min-width:170px;overflow:hidden;z-index:200;">
+                <div onclick="toggleTheme();toggleMoreMenu();" style="display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--bdr);">
+                  <svg id="icoSun" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display:none;flex-shrink:0;">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                  </svg>
+                  <svg id="icoMoon" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                  </svg>
+                  <span id="themeLabelMenu" style="font-size:13px;font-weight:600;color:var(--t);">Tamsi tema</span>
+                </div>
+                <div onclick="showLogout()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  <span style="font-size:13px;font-weight:600;color:#dc2626;">Atsijungti</span>
+                </div>
+              </div>
+            </div>
             <div
               style="
                 display: flex;
@@ -972,6 +1006,55 @@
                     <path d="m9 18 6-6-6-6"></path>
                   </svg>
                 </div>
+                <div class="srow" id="goDuty" style="padding: 11px 14px">
+                  <div
+                    style="
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 8px;
+                      background: rgba(15, 118, 110, 0.1);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      flex-shrink: 0;
+                    "
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#0F766E"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      width="16"
+                      height="16"
+                    >
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                  </div>
+                  <div style="flex: 1; margin-left: 10px">
+                    <div style="font-size: 14px; font-weight: 600">
+                      Budėjimas
+                    </div>
+                    <div
+                      style="font-size: 11px; color: var(--t3); margin-top: 1px"
+                    >
+                      Budėjimo metu atlikti darbai
+                    </div>
+                  </div>
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="15"
+                    height="15"
+                    stroke="var(--t3)"
+                    fill="none"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </div>
                 <div class="srow" id="goAtas" style="padding: 11px 14px">
                   <div
                     class="tool-ico-cya"
@@ -1081,101 +1164,8 @@
                 </div>
               </div>
             </div>
-            <div style="padding: 12px 16px 8px">
-              <div class="slbl" style="padding: 10px 0 6px">Nustatymai</div>
-              <div
-                style="
-                  background: var(--bg2);
-                  border-radius: var(--r);
-                  box-shadow: var(--sh);
-                  display: flex;
-                  overflow: hidden;
-                "
-              >
-                <div
-                  id="themeRow"
-                  onclick="toggleTheme()"
-                  style="
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 14px 12px;
-                    cursor: pointer;
-                    gap: 5px;
-                    border-right: 1px solid var(--bdr);
-                  "
-                >
-                  <svg
-                    id="icoSun"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#F59E0B"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="24"
-                    height="24"
-                    style="display: none"
-                  >
-                    <circle cx="12" cy="12" r="4"></circle>
-                    <path
-                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-                    ></path>
-                  </svg>
-                  <svg
-                    id="icoMoon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#818CF8"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="24"
-                    height="24"
-                  >
-                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-                  </svg>
-                  <span
-                    style="font-size: 10px; font-weight: 600; color: var(--t2)"
-                    id="themeLabel"
-                    >Tamsi tema</span
-                  >
-                </div>
-                <div
-                  id="logoutBtn"
-                  style="
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 14px 12px;
-                    cursor: pointer;
-                    gap: 5px;
-                  "
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#DC2626"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    width="24"
-                    height="24"
-                  >
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                  </svg>
-                  <span
-                    style="font-size: 10px; font-weight: 600; color: #dc2626"
-                    >Atsijungti</span
-                  >
-                </div>
-              </div>
+            <div style="padding: 12px 16px 8px; text-align:center;">
+              <span style="font-size:11px;color:var(--t3);">v1.0.0 · © 2026 Euroelektronika</span>
             </div>
           </div>
         </div>
@@ -1230,6 +1220,69 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- BUDEJIMAS (DUTY LOG) -->
+      <div class="pg" id="pgDuty">
+        <div style="background:var(--bg2);border-bottom:1px solid var(--bdr);flex-shrink:0;">
+          <div class="topbar" style="border:none;padding-bottom:8px;">
+            <button class="back-btn" id="dutyBack">
+              <svg viewBox="0 0 24 24">
+                <path d="m12 19-7-7 7-7"></path>
+                <path d="M19 12H5"></path>
+              </svg>
+            </button>
+            <span class="ttl">Budėjimas</span>
+            <button
+              id="dutyAddBtn"
+              style="width:36px;height:36px;border-radius:10px;background:var(--acc);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="scroll" style="padding:12px 14px;">
+          <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:10px;padding:7px 12px;margin-bottom:10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            <input id="dutySearch" style="flex:1;background:transparent;border:none;font-size:13px;color:var(--t);font-family:var(--f);outline:none;" placeholder="Ieškoti įrašų..." oninput="renderDuty()" />
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <button id="dutyFMonth" onclick="dutyFilter='month';renderDuty();" style="padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;background:var(--acc);color:#fff;border:1.5px solid var(--acc);font-weight:700;">Šis mėnuo</button>
+            <button id="dutyFAll" onclick="dutyFilter='all';renderDuty();" style="padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;background:var(--bg3);color:var(--t2);border:1.5px solid var(--bdr);font-weight:600;">Visi</button>
+            <button id="dutyFMine" onclick="dutyFilter='mine';renderDuty();" style="padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;background:var(--bg3);color:var(--t2);border:1.5px solid var(--bdr);font-weight:600;">Mano</button>
+          </div>
+          <div id="dutyList"></div>
+        </div>
+        <div class="bnav">
+          <button class="nb" data-tab="jobs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+              <rect x="9" y="3" width="6" height="4" rx="2"></rect>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg></button
+          ><button class="nb" data-tab="msgs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg></button
+          ><button class="nb" data-tab="cal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg></button
+          ><button class="nb on" data-tab="more">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="1"></circle>
               <circle cx="19" cy="12" r="1"></circle>
               <circle cx="5" cy="12" r="1"></circle>
@@ -1533,6 +1586,7 @@
       </div>
     </div>
     <!-- shell -->
+  </div><!-- /shell -->
 
     <!-- MODALS -->
     <div class="moverlay" id="drawModal">
@@ -1603,6 +1657,137 @@
         </div>
       </div>
     </div>
+
+    <!-- SIGNATURE MODAL -->
+    <div class="moverlay" id="sigModal">
+      <div class="mpanel" style="padding: 0; overflow: hidden; width: 100%; max-width: 480px; border-radius: 20px 20px 0 0;">
+        <div class="mhdr" style="padding: 16px 16px 0;">
+          <span class="mtitl">Kliento parašas</span>
+          <button class="mx" id="sigModalClose">✕</button>
+        </div>
+        <div style="padding: 12px 16px 8px; font-size: 12px; color: var(--t3);">
+          Pasirašykite žemiau esančiame laukelyje pirštu arba pelyte
+        </div>
+        <div style="padding: 0 16px;">
+          <div style="position:relative;">
+            <canvas
+              id="sigCanvas"
+              width="640"
+              height="260"
+              style="width:100%;height:160px;background:var(--bg3);border-radius:10px;border:1.5px solid var(--bdr);display:block;touch-action:none;cursor:crosshair;"
+            ></canvas>
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+              <span style="font-size:11px;color:var(--t3);opacity:0.45;">— Parašo linija —</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;padding:14px 16px 20px;">
+          <button
+            id="sigClear"
+            style="flex:1;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:11px;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer;"
+          >
+            Išvalyti
+          </button>
+          <button
+            id="sigSave"
+            style="flex:2;background:var(--acc);border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;"
+          >
+            Išsaugoti parašą
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DUTY (BUDEIJIMAS) ADD MODAL -->
+    <div class="moverlay" id="dutyModal">
+      <div class="mpanel" style="padding:0;display:flex;flex-direction:column;max-height:88vh;overflow:hidden;width:100%;box-sizing:border-box;">
+        <div class="mhdr" style="padding:20px 16px 0;flex-shrink:0;">
+          <span class="mtitl">Naujas budėjimo įrašas</span>
+          <button class="mx" id="dutyModalClose">✕</button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:14px 16px 8px;min-width:0;box-sizing:border-box;">
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Data ir laikas</div>
+            <input
+              type="datetime-local"
+              id="dutyDateInp"
+              style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;"
+            />
+          </div>
+          <div style="position:relative;">
+            <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Įmonė</div>
+            <div style="position:relative;">
+              <input
+                id="dutyCompanyInp"
+                autocomplete="off"
+                style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 36px 10px 12px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;"
+                placeholder="Ieškoti arba įrašyti..."
+                oninput="dutyFilterDropdown('company')"
+                onfocus="dutyOpenDropdown('company')"
+              />
+              <svg style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div id="dutyCompanyDrop" style="display:none;position:absolute;left:0;right:0;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18);z-index:200;max-height:180px;overflow-y:auto;margin-top:3px;"></div>
+          </div>
+          <div style="position:relative;">
+            <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Objektas</div>
+            <div style="position:relative;">
+              <input
+                id="dutyObjInp"
+                autocomplete="off"
+                style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 36px 10px 12px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;"
+                placeholder="Ieškoti arba įrašyti..."
+                oninput="dutyFilterDropdown('obj')"
+                onfocus="dutyOpenDropdown('obj')"
+              />
+              <svg style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div id="dutyObjDrop" style="display:none;position:absolute;left:0;right:0;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18);z-index:200;max-height:180px;overflow-y:auto;margin-top:3px;"></div>
+          </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Gedimas</div>
+            <textarea
+              id="dutyFaultInp"
+              style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;min-height:60px;resize:none;"
+              placeholder="Kas sugedę / kodėl iškviestas..."
+            ></textarea>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Atlikti darbai</div>
+            <textarea
+              id="dutyActInp"
+              style="width:100%;box-sizing:border-box;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;min-height:70px;resize:none;"
+              placeholder="Ką padarėte..."
+            ></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button type="button" id="dutyPhotoBtn" style="display:flex;align-items:center;gap:6px;background:var(--bg3);border:1.5px solid var(--bdr);border-radius:9px;padding:7px 13px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3L14.5 4z"/><circle cx="12" cy="13" r="3"/></svg>
+                Foto
+              </button>
+            </div>
+            <div id="dutyPhotoList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;font-weight:600;color:var(--t2);">Perduota vadovui</span>
+            <div style="display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--bdr);">
+              <button type="button" id="dutyMgrNo" onclick="dutySetMgr(false)" style="padding:6px 18px;border:none;background:var(--acc);color:#fff;font-size:12px;font-weight:700;cursor:pointer;">Ne</button>
+              <button type="button" id="dutyMgrYes" onclick="dutySetMgr(true)" style="padding:6px 18px;border:none;background:var(--bg3);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;">Taip</button>
+            </div>
+          </div>
+        </div><!-- /scroll -->
+        <div style="padding:12px 16px 32px;flex-shrink:0;">
+          <button
+            id="dutySaveBtn"
+            style="width:100%;background:var(--acc);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;"
+          >
+            Išsaugoti įrašą
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="moverlay" id="logoutModal">
       <div class="mpanel" style="padding: 24px 20px 32px">
         <div style="text-align: center; margin-bottom: 20px">
