@@ -341,15 +341,33 @@ body.dark .s-work {
     0 6px 20px rgba(79, 142, 247, 0.15) !important;
 }
 @keyframes job-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(26, 86, 160, 0.08), 0 6px 20px rgba(26, 86, 160, 0.12); }
-  50% { box-shadow: 0 0 0 5px rgba(26, 86, 160, 0.14), 0 6px 20px rgba(26, 86, 160, 0.18); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(26, 86, 160, 0.08),
+      0 6px 20px rgba(26, 86, 160, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(26, 86, 160, 0.14),
+      0 6px 20px rgba(26, 86, 160, 0.18);
+  }
 }
 body.dark .jcard.s-work {
   animation: job-pulse-dark 2.5s ease-in-out infinite;
 }
 @keyframes job-pulse-dark {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1), 0 6px 20px rgba(79, 142, 247, 0.15); }
-  50% { box-shadow: 0 0 0 5px rgba(79, 142, 247, 0.18), 0 6px 20px rgba(79, 142, 247, 0.22); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(79, 142, 247, 0.1),
+      0 6px 20px rgba(79, 142, 247, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(79, 142, 247, 0.18),
+      0 6px 20px rgba(79, 142, 247, 0.22);
+  }
 }
 .s-stop {
   box-shadow:
