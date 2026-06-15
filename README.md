@@ -1,1 +1,1 @@
-https://eimuc.github.com/e-help
+https://eimuc.github.io/e-help
